@@ -1,0 +1,185 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap"
+  rel="stylesheet"
+>
+
+{{ 'gift-guide.css' | asset_url | stylesheet_tag }}
+
+<section
+  id="GiftGuide-{{ section.id }}"
+  class="gift-guide gift-guide--hero"
+  data-section-id="{{ section.id }}"
+>
+  <header class="gift-guide__topbar">
+    <button
+      type="button"
+      class="gift-guide__mobile-menu"
+      aria-label="Open navigation menu"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <a href="{{ routes.root_url }}" class="gift-guide__brand">
+      <img
+        src="{{ 'logo.png' | asset_url }}"
+        alt="Tisso Vision"
+        class="gift-guide__brand-logo"
+        loading="eager"
+        width="220"
+        height="40"
+      >
+    </a>
+
+    <p class="gift-guide__tagline">Find the ideal gift for your loved ones.</p>
+
+    <a
+      class="gift-guide__cta gift-guide__cta--accent"
+      href="#gift-guide-products"
+    >
+      <span>Choose Gift</span>
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="24" height="24">
+        <path
+          d="M5 12h14M14 7l5 5-5 5"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+        />
+      </svg>
+    </a>
+  </header>
+
+  <!-- Desktop hero -->
+  <div class="gift-guide__hero gift-guide__hero--desktop">
+    <img
+      class="gift-guide__hero-top-image"
+      src="{{ 'gift-guide-hero-top.png' | asset_url }}"
+      alt=""
+      loading="eager"
+      fetchpriority="high"
+      width="1440"
+      height="390"
+    >
+
+    <img
+      class="gift-guide__hero-bottom-image"
+      src="{{ 'gift-guide-hero-bottom-right.png' | asset_url }}"
+      alt=""
+      loading="eager"
+      fetchpriority="high"
+      width="890"
+      height="402"
+    >
+
+    <div class="gift-guide__hero-content">
+      <h1 class="gift-guide__heading">
+        {{ section.settings.heading | escape }}
+      </h1>
+
+      <div class="gift-guide__description">
+        {{ section.settings.description }}
+      </div>
+
+      <a class="gift-guide__cta gift-guide__cta--primary" href="#gift-guide-products">
+        <span>{{ section.settings.primary_button_label | escape }}</span>
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="24" height="24">
+          <path
+            d="M5 12h14M14 7l5 5-5 5"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+          />
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Mobile hero: independent layout, no desktop artwork overlap -->
+  <div class="gift-guide__mobile-hero">
+    <div class="gift-guide__mobile-copy">
+      <h1 class="gift-guide__mobile-heading">
+        {{ section.settings.heading | escape }}
+      </h1>
+
+      <div class="gift-guide__mobile-description">
+        {{ section.settings.description }}
+      </div>
+    </div>
+
+    <div class="gift-guide__mobile-artwork">
+      <img
+        class="gift-guide__mobile-artwork-image"
+        src="{{ 'gift-guide-hero-top-M.png' | asset_url }}"
+        alt=""
+        loading="eager"
+        fetchpriority="high"
+        width="390"
+        height="560"
+      >
+
+      <a class="gift-guide__cta gift-guide__mobile-cta" href="#gift-guide-products">
+        <span>{{ section.settings.primary_button_label | escape }}</span>
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="24" height="24">
+          <path
+            d="M5 12h14M14 7l5 5-5 5"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+          />
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <p class="gift-guide__statement">
+    {{ section.settings.statement | escape }}
+  </p>
+</section>
+
+{% schema %}
+{
+  "name": "Gift Guide Hero",
+  "tag": "section",
+  "class": "gift-guide-hero-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Gift Guide"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.</p>"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_label",
+      "label": "Primary button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "text",
+      "id": "statement",
+      "label": "Bottom statement",
+      "default": "Sustainable, ethically made clothes in sizes XXS to 6XL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Guide Hero"
+    }
+  ]
+}
+{% endschema %}

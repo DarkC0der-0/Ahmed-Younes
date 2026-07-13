@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "gift_guide_hero": {
+      "type": "gift-guide-hero",
+      "settings": {}
+    },
+    "gift_guide_products": {
+      "type": "gift-guide-products",
+      "settings": {}
+    }
+  },
+  "order": [
+    "gift_guide_hero",
+    "gift_guide_products"
+  ]
+}

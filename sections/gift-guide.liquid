@@ -1,0 +1,472 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap"
+
+  rel="stylesheet"
+>
+
+{{ 'gift-guide.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'gift-guide.js' | asset_url }}" defer></script>
+
+<section
+  id="GiftGuide-{{ section.id }}"
+  class="gift-guide"
+  data-section-id="{{ section.id }}"
+>
+  <header class="gift-guide__topbar">
+    <a href="{{ routes.root_url }}" class="gift-guide__brand">
+      <img
+        src="{{ 'logo.png' | asset_url }}"
+        alt="Tisso Vision"
+        class="gift-guide__brand-logo"
+        loading="eager"
+        width="220"
+        height="40"
+      >
+    </a>
+
+    <p class="gift-guide__tagline">Find the ideal gift for your loved ones.</p>
+
+    <a
+      class="gift-guide__cta gift-guide__cta--accent"
+      href="#gift-guide-products"
+    >
+      <span>Choose Gift</span>
+
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        viewBox="0 0 24 24"
+        width="24"
+        height="24"
+      >
+        <path
+          d="M5 12h14M14 7l5 5-5 5"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+        />
+      </svg>
+    </a>
+  </header>
+
+  <div class="gift-guide__hero">
+    <img
+      class="gift-guide__hero-top-image"
+      src="{{ 'gift-guide-hero-top.png' | asset_url }}"
+      alt=""
+      loading="eager"
+      fetchpriority="high"
+      width="1440"
+      height="430"
+    >
+
+    <img
+      class="gift-guide__hero-bottom-image"
+      src="{{ 'gift-guide-hero-bottom-right.png' | asset_url }}"
+      alt=""
+      loading="eager"
+      fetchpriority="high"
+      width="820"
+      height="340"
+    >
+
+    <div class="gift-guide__hero-content">
+      <h1 class="gift-guide__heading">
+        {{ section.settings.heading | escape }}
+      </h1>
+
+      <div class="gift-guide__description">
+        {{ section.settings.description }}
+      </div>
+
+      <a
+        class="gift-guide__cta gift-guide__cta--primary"
+        href="#gift-guide-products"
+      >
+        <span>{{ section.settings.primary_button_label | escape }}</span>
+
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+        >
+          <path
+            d="M5 12h14M14 7l5 5-5 5"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+          />
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <p class="gift-guide__statement">
+    {{ section.settings.statement | escape }}
+  </p>
+
+  <div
+    id="gift-guide-products"
+    class="gift-guide__products"
+    aria-labelledby="gift-guide-products-title"
+  >
+    <div class="gift-guide__products-container">
+      <h2
+        id="gift-guide-products-title"
+        class="gift-guide__products-heading"
+      >
+        {{ section.settings.products_heading | escape }}
+      </h2>
+
+      <div class="gift-guide__product-grid">
+        {% assign product_handles = 'black-leather-bag,blue-silk-tuxedo,chequered-red-shirt,classic-leather-jacket,classic-varsity-top,dark-denim-top'
+          | split: ','
+        %}
+
+        {% for product_handle in product_handles %}
+          {% assign product = all_products[product_handle] %}
+
+          {% case product_handle %}
+            {% when 'black-leather-bag' %}
+              {% assign hotspot_x = 50 %}
+              {% assign hotspot_y = 62 %}
+
+            {% when 'blue-silk-tuxedo' %}
+              {% assign hotspot_x = 85 %}
+              {% assign hotspot_y = 52 %}
+
+            {% when 'chequered-red-shirt' %}
+              {% assign hotspot_x = 61 %}
+              {% assign hotspot_y = 20 %}
+
+            {% when 'classic-leather-jacket' %}
+              {% assign hotspot_x = 72 %}
+              {% assign hotspot_y = 19 %}
+
+            {% when 'classic-varsity-top' %}
+              {% assign hotspot_x = 52 %}
+              {% assign hotspot_y = 25 %}
+
+            {% when 'dark-denim-top' %}
+              {% assign hotspot_x = 45 %}
+              {% assign hotspot_y = 60 %}
+
+            {% else %}
+              {% assign hotspot_x = 50 %}
+              {% assign hotspot_y = 50 %}
+          {% endcase %}
+
+          {% if product != blank %}
+            <article
+              class="gift-guide__product-card"
+              data-product-handle="{{ product.handle }}"
+            >
+              <div class="gift-guide__product-media">
+                {% if product.featured_image %}
+                  {{
+                    product.featured_image
+                    | image_url: width: 900
+                    | image_tag:
+                      class: 'gift-guide__product-image',
+                      loading: 'lazy',
+                      widths: '320, 480, 640, 900',
+                      sizes: '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw',
+                      alt: product.featured_image.alt
+                  }}
+                {% endif %}
+
+                <button
+                  type="button"
+                  class="gift-guide__product-trigger"
+                  style="
+                    --hotspot-x: {{ hotspot_x }}%;
+                    --hotspot-y: {{ hotspot_y }}%;
+                  "
+                  aria-label="View {{ product.title | escape }}"
+                  aria-haspopup="dialog"
+                  data-product-trigger
+                  data-modal-target="GiftProductModal-{{ section.id }}-{{ product.handle }}"
+                >
+                  <span aria-hidden="true">+</span>
+                </button>
+              </div>
+            </article>
+            <dialog
+              id="GiftProductModal-{{ section.id }}-{{ product.handle }}"
+              class="gift-guide-modal"
+              data-product-modal
+              data-product-handle="{{ product.handle }}"
+              aria-labelledby="GiftProductTitle-{{ section.id }}-{{ product.handle }}"
+            >
+              <div class="gift-guide-modal__panel">
+                <button
+                  type="button"
+                  class="gift-guide-modal__close"
+                  aria-label="Close product details"
+                  data-modal-close
+                >
+                  <span aria-hidden="true"></span>
+                </button>
+
+                {% assign selected_variant = product.selected_or_first_available_variant %}
+
+                <div class="gift-guide-modal__summary">
+                  <div class="gift-guide-modal__image-wrapper">
+                    {% if selected_variant.featured_image %}
+                      {% assign modal_image = selected_variant.featured_image %}
+                    {% else %}
+                      {% assign modal_image = product.featured_image %}
+                    {% endif %}
+
+                    {% if modal_image %}
+                      {{
+                        modal_image
+                        | image_url: width: 700
+                        | image_tag:
+                          class: 'gift-guide-modal__image',
+                          loading: 'lazy',
+                          widths: '280, 420, 560, 700',
+                          sizes: '(max-width: 749px) 120px, 180px',
+                          alt: modal_image.alt,
+                          data-modal-image: ''
+                      }}
+                    {% endif %}
+                  </div>
+
+                  <div class="gift-guide-modal__details">
+                    <h3
+                      id="GiftProductTitle-{{ section.id }}-{{ product.handle }}"
+                      class="gift-guide-modal__title"
+                    >
+                      {{ product.title | escape }}
+                    </h3>
+
+                    <p
+                      class="gift-guide-modal__price"
+                      data-modal-price
+                    >
+                      {{ selected_variant.price | money }}
+                    </p>
+
+                    <div class="gift-guide-modal__description">
+                      {{ product.description | strip_html | truncatewords: 22 }}
+                    </div>
+                  </div>
+                </div>
+
+                <form
+                  class="gift-guide-modal__form"
+                  data-product-form
+                >
+                  {% for option in product.options_with_values %}
+                    {% assign normalized_option_name = option.name | downcase %}
+
+                    {% if normalized_option_name contains 'color' or normalized_option_name contains 'colour' %}
+                      <fieldset
+                        class="gift-guide-modal__fieldset gift-guide-modal__option--color"
+                        data-product-option
+                        data-option-position="{{ option.position }}"
+                      >
+                        <legend class="gift-guide-modal__label">
+                          {{ option.name | escape }}
+                        </legend>
+
+                        <div class="gift-guide-modal__swatches">
+                          {% for value in option.values %}
+                            {% assign input_id = 'GiftOption-'
+                              | append: section.id
+                              | append: '-'
+                              | append: product.handle
+                              | append: '-'
+                              | append: option.position
+                              | append: '-'
+                              | append: forloop.index
+                            %}
+
+                            <input
+                              id="{{ input_id }}"
+                              class="gift-guide-modal__swatch-input visually-hidden"
+                              type="radio"
+                              name="option{{ option.position }}-{{ product.handle }}"
+                              value="{{ value | escape }}"
+                              data-option-input
+                              {% if option.selected_value == value %}
+                                checked
+                              {% endif %}
+                            >
+
+                            <label
+                              for="{{ input_id }}"
+                              class="gift-guide-modal__swatch"
+                            >
+                              {{ value | escape }}
+                            </label>
+                          {% endfor %}
+                        </div>
+                      </fieldset>
+                    {% endif %}
+                  {% endfor %}
+
+                  {% for option in product.options_with_values %}
+                    {% assign normalized_option_name = option.name | downcase %}
+
+                    {% unless normalized_option_name contains 'color' or normalized_option_name contains 'colour' %}
+                      <div
+                        class="gift-guide-modal__field gift-guide-modal__option--size"
+                        data-product-option
+                        data-option-position="{{ option.position }}"
+                      >
+                        <span class="gift-guide-modal__label">
+                          {{ option.name | escape }}
+                        </span>
+
+                        <div
+                          class="gift-guide-modal__dropdown"
+                          data-custom-dropdown
+                        >
+                          <button
+                            type="button"
+                            class="gift-guide-modal__dropdown-trigger"
+                            aria-expanded="false"
+                            aria-haspopup="listbox"
+                            data-dropdown-trigger
+                          >
+                            <span data-dropdown-label> Choose your {{ option.name | downcase }} </span>
+
+                            <span
+                              class="gift-guide-modal__dropdown-icon"
+                              aria-hidden="true"
+                            ></span>
+                          </button>
+
+                          <div
+                            class="gift-guide-modal__dropdown-menu"
+                            role="listbox"
+                            hidden
+                            data-dropdown-menu
+                          >
+                            {% for value in option.values %}
+                              <button
+                                type="button"
+                                class="gift-guide-modal__dropdown-option"
+                                role="option"
+                                aria-selected="false"
+                                data-dropdown-option
+                                data-value="{{ value | escape }}"
+                              >
+                                {{ value | escape }}
+                              </button>
+                            {% endfor %}
+                          </div>
+
+                          <input
+                            type="hidden"
+                            value=""
+                            data-option-input
+                            data-dropdown-input
+                          >
+                        </div>
+                      </div>
+                    {% endunless %}
+                  {% endfor %}
+
+                  <input
+                    type="hidden"
+                    name="id"
+                    value="{{ selected_variant.id }}"
+                    data-variant-id
+                  >
+
+                  <button
+                    type="submit"
+                    class="gift-guide-modal__add-button"
+                    data-add-to-cart
+                    {% unless selected_variant.available %}
+                      disabled
+                    {% endunless %}
+                  >
+                    <span data-add-label>
+                      {% if selected_variant.available %}
+                        Add to cart
+                      {% else %}
+                        Sold out
+                      {% endif %}
+                    </span>
+
+                    <span
+                      class="gift-guide-modal__add-icon"
+                      aria-hidden="true"
+                    ></span>
+                  </button>
+                </form>
+
+                <script
+                  type="application/json"
+                  data-product-variants
+                >
+                  {{ product.variants | json }}
+                </script>
+              </div>
+            </dialog>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Gift Guide",
+  "tag": "section",
+  "class": "gift-guide-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Gift Guide"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.</p>"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_label",
+      "label": "Primary button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "text",
+      "id": "statement",
+      "label": "Bottom statement",
+      "default": "Sustainable, ethically made clothes in sizes XXS to 6XL"
+    },
+    {
+      "type": "text",
+      "id": "products_heading",
+      "label": "Products heading",
+      "default": "Tisso vision in the wild"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Guide"
+    }
+  ]
+}
+{% endschema %}
